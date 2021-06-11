@@ -1,0 +1,8 @@
+{
+    "mysql_host"        :   "localhost",
+    "mysql_user"        :   "root",
+    "mysql_password"    :   "password",
+    "mysql_database"    :   "apm",
+    "server_port"       :   3001,
+    "mysql_port"        :   3306
+}

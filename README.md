@@ -1,1 +1,1 @@
-# CISC699_services
+# Run 'npm install' and 'node server' commands to start services
