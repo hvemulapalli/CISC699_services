@@ -4,5 +4,5 @@
     "mysql_password"    :   "password",
     "mysql_database"    :   "apm",
     "server_port"       :   3006,
-    "mysql_port"        :   3307
+    "mysql_port"        :   3306
 }
