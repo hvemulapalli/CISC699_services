@@ -3,6 +3,6 @@
     "mysql_user"        :   "root",
     "mysql_password"    :   "password",
     "mysql_database"    :   "apm",
-    "server_port"       :   3004,
+    "server_port"       :   3005,
     "mysql_port"        :   3306
 }
