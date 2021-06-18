@@ -1,9 +1,9 @@
 const User = require("../models/user.model.js");
 
 exports.create = (req,res)=>{
-    
+    console.log(req.body);
     if((req.body.emp_id=="")||(req.body.user_name=="")||(req.body.user_email=="")||(req.body.user_password=="")||(req.body.user_phone_number=="")||(req.body.role_type=="")||(req.body.admin_id=="")){
-        res.status(400).send({"statuscode":400,"body":"Input params must not be empty."})
+        res.send({"statuscode":400,"body":"Input params must not be empty."})
     }else{
         const user = new User({
             emp_id              : req.body.emp_id,
