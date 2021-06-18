@@ -16,6 +16,6 @@ COPY . .
 
 #RUN chmod -R 777 /usr/src/app/
 
-EXPOSE 3001 3306
+EXPOSE 3000 3306
 # Start the app
 ENTRYPOINT ["/usr/local/bin/node", "server"]
