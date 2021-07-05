@@ -1,5 +1,5 @@
 {
-    "mysql_host"        :   "localhost",
+    "mysql_host"        :   "172.18.0.4",
     "mysql_user"        :   "root",
     "mysql_password"    :   "root",
     "mysql_database"    :   "apm",
