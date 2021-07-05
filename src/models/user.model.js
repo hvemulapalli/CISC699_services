@@ -57,4 +57,23 @@ User.login = (userdata,result)=>{
     }); 
 };
 
+User.update = (edituser,result)=>{
+    dbconn.query("Update users SET user_name=?,user_email=?,user_password=?,user_phone_number=?,role_type=? where user_id = ?",
+                [edituser.user_name,edituser.user_email,edituser.user_password,edituser.user_phone_number,edituser.role_type,edituser.user_id],(err,res)=>{
+                    if(err){
+                        if(err.code=='ER_DUP_ENTRY'){
+                            result(null,{"statuscode":400,"body":"User with this email already exists."});
+                        }
+                        // console.log(err);
+                    }else{
+                        if(res.affectedRows == 0){
+                            result(null,{"statuscode":400,"body":"User Update Failed."});
+                        }else{
+                            result(null,{"statuscode":200,"body":"User Updated Successfully."});
+                        }
+                    }
+            });
+};
+
+
 module.exports = User;

@@ -1,3 +1,4 @@
+const Bug = require("../models/bugs.model.js");
 const Bugs = require("../models/bugs.model.js");
 const Users = require("../models/user.model.js");
 
@@ -52,9 +53,9 @@ exports.getbugs = async(req,res)=>{
             let bugassignee;
             userslists_data.forEach(e2=>{
                 if(e1.bug_created_by == e2.user_id){
-                    bugcreated_by = e2.user_name;
+                    bugcreated_by = {"id":e2.user_id,"name":e2.user_name};
                 }else if(e1.bug_assignee == e2.user_id){
-                    bugassignee = e2.user_name;
+                    bugassignee = {"id":e2.user_id,"name":e2.user_name};
                 }
             });
             total_bugs_list.push({
@@ -73,8 +74,61 @@ exports.getbugs = async(req,res)=>{
         });
         res.send({"statuscode":200,"body":total_bugs_list});
     }else{
-        res.send({"statuscode":200,"body":"No bugs listed."});
+        res.send({"statuscode":200,"body":[]});
     }
+
+};
+
+exports.listusersbugs = async(req,res)=>{
+    var userid = req.body.user_id;
+    var bugslists_data;
+    var userslists_data;
+
+    try{
+        const bugslist = await getbugsbyuserid(userid);
+        bugslists_data = bugslist;
+    }catch(err){
+        console.log(err);
+    }
+
+    try{
+        const userslist = await users();
+        userslists_data = userslist;
+    }catch(err1){
+        console.log(err1);
+    }
+
+    if(bugslists_data.length>0){
+        var total_bugs_list = [];
+        bugslists_data.forEach(e1=>{
+            let bugcreated_by;
+            let bugassignee;
+            userslists_data.forEach(e2=>{
+                if(e1.bug_created_by == e2.user_id){
+                    bugcreated_by = {"id":e2.user_id,"name":e2.user_name};
+                }else if(e1.bug_assignee == e2.user_id){
+                    bugassignee = {"id":e2.user_id,"name":e2.user_name};
+                }
+            });
+            total_bugs_list.push({
+                "bug_id": e1.bug_id,
+                "bug_name": e1.bug_name,
+                "bug_description":e1.bug_description,
+                "bug_priority":e1.bug_priority,
+                "bug_points": e1.bug_points,
+                "bug_status":e1.bug_status,
+                "bug_created_by" : bugcreated_by,
+                "bug_assignee" : bugassignee,
+                "bug_completed_hours": e1.bug_completed_hours,
+                "bug_estimated_hours": e1.bug_estimated_hours,
+                "bug_sprint" : e1.bug_sprint
+            });
+        });
+        res.send({"statuscode":200,"body":total_bugs_list});
+    }else{
+        res.send({"statuscode":200,"body":[]});
+    }
+
 
 };
 
@@ -99,3 +153,24 @@ const bugs = ()=>
             }
         })
     });
+
+const getbugsbyuserid = (user_id)=>
+    new Promise((resolve,reject)=>{
+        Bugs.listofuserbugs(user_id,(err,data)=>{
+            if(err){
+                reject(err);
+            }else{
+                resolve(data);
+            }
+    });
+});
+
+exports.updatebug =(req,res)=>{
+    Bug.updatebug(req.body,(err,data)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.send(data);
+        }
+    });
+};
