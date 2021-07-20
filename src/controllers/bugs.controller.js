@@ -129,7 +129,43 @@ exports.listusersbugs = async(req,res)=>{
         res.send({"statuscode":200,"body":[]});
     }
 
+};
 
+exports.getfilterbugs = async(req,res)=>{
+    var status    = req.body.status;
+    var sprint_id = req.body.sprint_id;
+
+    var bugs_list = await getbugsbystatus(status,sprint_id);
+    var userslists_data = await users();
+
+    if(bugs_list.length>0){
+        var total_bugs_list = [];
+        bugs_list.forEach(e1=>{
+            let bugcreated_by;
+            let bugassignee;
+            userslists_data.forEach(e2=>{
+                if(e1.bug_created_by == e2.user_id){
+                    bugcreated_by = {"id":e2.user_id,"name":e2.user_name};
+                }else if(e1.bug_assignee == e2.user_id){
+                    bugassignee = {"id":e2.user_id,"name":e2.user_name};
+                }
+            });
+            total_bugs_list.push({
+                "bug_name": e1.bug_name,
+                "bug_description":e1.bug_description,
+                "bug_priority":e1.bug_priority,
+                "bug_points": e1.bug_points,
+                "bug_status":e1.bug_status,
+                "bug_created_by" : bugcreated_by,
+                "bug_assignee" : bugassignee,
+                "bug_completed_hours": e1.bug_completed_hours,
+                "bug_estimated_hours": e1.bug_estimated_hours,
+            });
+        });
+        res.send({"statuscode":200,"body":total_bugs_list});
+    }else{
+        res.send({"statuscode":200,"body":[]});
+    }
 };
 
 const users = ()=>
@@ -165,8 +201,31 @@ const getbugsbyuserid = (user_id)=>
     });
 });
 
+const getbugsbystatus = (status,sprint_id)=>
+    new Promise((resolve,reject)=>{
+        Bugs.getfilterbug(status,sprint_id,(err,data)=>{
+            if(err){
+                reject(err);
+            }else{
+                resolve(data);
+            }
+        });
+});
+
 exports.updatebug =(req,res)=>{
     Bug.updatebug(req.body,(err,data)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.send(data);
+        }
+    });
+};
+
+exports.moveBugtosprint = (req,res)=>{
+    var sprint_id = req.body.sprint_id;
+    var bug_id  = req.body.bug_id;
+    Bug.moveBugtosprint(sprint_id,bug_id,(err,data)=>{
         if(err){
             console.log(err);
         }else{
