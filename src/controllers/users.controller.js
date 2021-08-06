@@ -1,9 +1,9 @@
 const User = require("../models/user.model.js");
 
 exports.create = (req,res)=>{
-    
+    console.log(req.body);
     if((req.body.emp_id=="")||(req.body.user_name=="")||(req.body.user_email=="")||(req.body.user_password=="")||(req.body.user_phone_number=="")||(req.body.role_type=="")||(req.body.admin_id=="")){
-        res.status(400).send({"statuscode":400,"body":"Input params must not be empty."})
+        res.send({"statuscode":400,"body":"Input params must not be empty."})
     }else{
         const user = new User({
             emp_id              : req.body.emp_id,
@@ -59,4 +59,18 @@ exports.userlogin = (req,res)=>{
             res.send(data);
         }
     });
+};
+
+exports.updateuser = (req,res)=>{
+    if((req.body.user_id=="")||(req.body.emp_id=="")||(req.body.user_name=="")||(req.body.user_email=="")||(req.body.user_password=="")||(req.body.user_phone_number=="")||(req.body.role_type=="")){
+        res.send({"statuscode":400,"body":"Input params must not be empty."})
+    }else{
+        User.update(req.body,(err,data)=>{
+            if(err){
+                console.log(err);
+            }else{
+                res.send(data);
+            }
+        });    
+    }    
 };
