@@ -60,3 +60,17 @@ exports.userlogin = (req,res)=>{
         }
     });
 };
+
+exports.updateuser = (req,res)=>{
+    if((req.body.user_id=="")||(req.body.emp_id=="")||(req.body.user_name=="")||(req.body.user_email=="")||(req.body.user_password=="")||(req.body.user_phone_number=="")||(req.body.role_type=="")){
+        res.send({"statuscode":400,"body":"Input params must not be empty."})
+    }else{
+        User.update(req.body,(err,data)=>{
+            if(err){
+                console.log(err);
+            }else{
+                res.send(data);
+            }
+        });    
+    }    
+};

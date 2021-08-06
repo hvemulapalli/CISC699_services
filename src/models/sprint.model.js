@@ -30,4 +30,19 @@ Sprint.getallsprints = (result)=>{
     });
 };
 
+Sprint.updatesprint = (editsprint,result)=>{
+    dbconn.query("UPDATE sprints SET sprint_name=?,sprint_duration=?,sprint_start_time=?,sprint_end_time=? where sprint_id=? and sprint_admin=?",
+    [editsprint.sprint_name,editsprint.sprint_duration,editsprint.sprint_start_time,editsprint.sprint_end_time,editsprint.sprint_id,editsprint.admin_id],(err,res)=>{
+        if(err){
+            console.log(err);
+        }else{
+            if(res.affectedRows == 0){
+                result(null,{"statuscode":400,"body":"Sprint Update Failed."});
+            }else{
+                result(null,{"statuscode":200,"body":"Sprint Updated Successfully."});
+            }
+        }
+    });
+};
+
 module.exports = Sprint;
